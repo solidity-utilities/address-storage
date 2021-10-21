@@ -18,6 +18,11 @@ jobs:
             ref: main
             fetch-depth: 10
             submodules: true
+            persist-credentials: false
+
+      # https://github.com/actions/setup-node/issues/214
+      - name: Reconfigure Git to use HTTP authentication
+        run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
 
       - name: Setup NodeJS
         uses: actions/setup-node@v2
