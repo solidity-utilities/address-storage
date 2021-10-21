@@ -12,17 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup NodeJS
-        uses: actions/setup-node@v2
-        with:
-          node_version: 16
-
       - name: Checkout source Git branch
         uses: actions/checkout@v2
         with:
             ref: main
             fetch-depth: 10
             submodules: true
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node_version: 16
 
       - name: Install dependencies via NPM
         run: npm ci
