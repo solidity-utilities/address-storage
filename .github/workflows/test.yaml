@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies via NPM
         run: npm ci
 
+      - name: Start Ganache CLI as background service
+        run: npm run ganache-cli 1>/dev/null &
+
       - name: Run CI/CD tests
         run: npm test
 
