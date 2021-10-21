@@ -459,7 +459,7 @@ ______
 > Overwrite old `owner` with new owner `address`
 
 
-[**Source**][source__contracts__addressstorage_sol__changeowner]
+[**Source**][source__contracts__addressstorage_sol__changeowner] `changeOwner(address _new_owner)`
 
 
 **Parameters**
@@ -483,7 +483,7 @@ ______
 > Delete `mapping` address key/value pairs and remove all `address` from `keys`
 
 
-[**Source**][source__contracts__addressstorage_sol__clear]
+[**Source**][source__contracts__addressstorage_sol__clear] `clear()`
 
 
 **Throws** -> **{Error}** `"AddressStorage.clar: message sender not an owner"`
@@ -504,7 +504,7 @@ ______
 > Retrieve stored value `address` or throws an error if _undefined_
 
 
-[**Source**][source__contracts__addressstorage_sol__get]
+[**Source**][source__contracts__addressstorage_sol__get] `get(address _key)`
 
 
 **Parameters**
@@ -536,7 +536,7 @@ default Error `_reason` to throw
 > Retrieve stored value `address` or provided default `address` if _undefined_
 
 
-[**Source**][source__contracts__addressstorage_sol__getorelse]
+[**Source**][source__contracts__addressstorage_sol__getorelse] `getOrElse(address _key, address _default)`
 
 
 **Parameters**
@@ -566,7 +566,7 @@ default Error `_reason` to throw
 > Allow for defining custom error reason if value `address` is _undefined_
 
 
-[**Source**][source__contracts__addressstorage_sol__getorerror]
+[**Source**][source__contracts__addressstorage_sol__getorerror] `getOrError(address _key, string _reason)`
 
 
 **Parameters**
@@ -599,7 +599,7 @@ default Error `_reason` to throw
 > Check if `address` key has a corresponding value `address` defined
 
 
-[**Source**][source__contracts__addressstorage_sol__has]
+[**Source**][source__contracts__addressstorage_sol__has] `has(address _key)`
 
 
 **Parameters**
@@ -628,7 +628,7 @@ _undefined_
 > Index for `address` key within `keys` array
 
 
-[**Source**][source__contracts__addressstorage_sol__indexof]
+[**Source**][source__contracts__addressstorage_sol__indexof] `indexOf(address _key)`
 
 
 **Parameters**
@@ -659,7 +659,7 @@ _undefined_
 > Index for `address` key within `keys` array
 
 
-[**Source**][source__contracts__addressstorage_sol__indexoforerror]
+[**Source**][source__contracts__addressstorage_sol__indexoforerror] `indexOfOrError(address _key, string _reason)`
 
 
 **Parameters**
@@ -690,7 +690,7 @@ allowed between calls
 > Convenience function to read all `mapping` key addresses
 
 
-[**Source**][source__contracts__addressstorage_sol__listkeys]
+[**Source**][source__contracts__addressstorage_sol__listkeys] `listKeys()`
 
 
 **Returns** -> **{address[]}** Keys `address` array
@@ -712,7 +712,7 @@ allowed between calls
 > Delete value `address` for given `_key`
 
 
-[**Source**][source__contracts__addressstorage_sol__remove]
+[**Source**][source__contracts__addressstorage_sol__remove] `remove(address _key)`
 
 
 **Parameters**
@@ -749,7 +749,7 @@ storage
 > Delete value `address` for given `_key`
 
 
-[**Source**][source__contracts__addressstorage_sol__removeorerror]
+[**Source**][source__contracts__addressstorage_sol__removeorerror] `removeOrError(address _key, string _reason)`
 
 
 **Parameters**
@@ -788,7 +788,7 @@ efficiency reasons
 > Store `_value` under given `_key` while preventing unintentional overwrites
 
 
-[**Source**][source__contracts__addressstorage_sol__set]
+[**Source**][source__contracts__addressstorage_sol__set] `set(address _key, address _value)`
 
 
 **Parameters**
@@ -823,7 +823,7 @@ efficiency reasons
 > Store `_value` under given `_key` while preventing unintentional overwrites
 
 
-[**Source**][source__contracts__addressstorage_sol__setorerror]
+[**Source**][source__contracts__addressstorage_sol__setorerror] `setOrError(address _key, address _value, string _reason)`
 
 
 **Parameters**
@@ -860,7 +860,7 @@ efficiency reasons
 > Number of key/value `address` pairs currently stored
 
 
-[**Source**][source__contracts__addressstorage_sol__size]
+[**Source**][source__contracts__addressstorage_sol__size] `size()`
 
 
 **Returns** -> **{uint256}** Length of `keys` array
@@ -1088,7 +1088,7 @@ For further details review full length version of
   "&#x2622; Search for and _bump_ existing issues or open new issues for project maintainer to address."
 
 [address_storage__fork_it]:
-  https://github.com/solidity-utilities/address-storage/
+  https://github.com/solidity-utilities/address-storage/fork
   "&#x1F531; Fork it!"
 
 [pull_requests__address_storage]:
