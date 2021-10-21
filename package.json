@@ -1,0 +1,43 @@
+{
+  "name": "@solidity-utilities/address-storage",
+  "version": "0.0.1",
+  "description": "Solidity contract for storing and interacting with key/value address pairs",
+  "main": "null",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "compile": "truffle compile",
+    "ganache-cli": "ganache-cli",
+    "soldocgen": "soldocgen --output gitbook --ignore Migrations.sol docs/ contracts/",
+    "test": "truffle test",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/solidity-utilities/address-storage.git"
+  },
+  "keywords": [
+    "address",
+    "contract",
+    "ethereum",
+    "solidity",
+    "truffle"
+  ],
+  "author": "S0AndS0",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/solidity-utilities/address-storage/issues"
+  },
+  "homepage": "https://github.com/solidity-utilities/address-storage#readme",
+  "devDependencies": {
+    "@truffle/hdwallet-provider": "^1.0.37",
+    "ganache-cli": "^6.5.0",
+    "husky": "^7.0.2",
+    "soldocgen": "^0.0.3",
+    "truffle": "^5.1.65"
+  },
+  "dependencies": {
+    "@solidity-utilities/library-mapping-address": "^0.0.2"
+  }
+}

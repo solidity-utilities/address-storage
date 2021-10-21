@@ -1,0 +1,32 @@
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node_version: 16
+
+      - name: Checkout source Git branch
+        uses: actions/checkout@v2
+        with:
+            ref: src-pages
+            fetch-depth: 10
+            submodules: true
+
+      - name: Install dependencies via NPM
+        run: npm ci
+
+      - name: Run CI/CD tests
+        run: npm test
+
