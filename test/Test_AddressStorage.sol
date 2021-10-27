@@ -8,7 +8,7 @@ import { AddressStorage } from "../contracts/AddressStorage.sol";
 
 ///
 contract Test_AddressStorage {
-    address owner_AddressStorage = address(this);
+    address payable owner_AddressStorage = payable(address(this));
     address _key = address(0x1);
     address _value = address(0x2);
     address _default_value = address(0x3);
@@ -92,6 +92,26 @@ contract Test_AddressStorage {
             Assert.equal(
                 _reason,
                 "Test_AddressStorage.test_removeOrError: value not defined",
+                "Caught unexpected error reason"
+            );
+        }
+    }
+
+    ///
+    function test_selfdestruct() public {
+        AddressStorage _data = new AddressStorage(owner_AddressStorage);
+        _data.selfDestruct(owner_AddressStorage);
+    }
+
+    ///
+    function test_selfdestruct_non_owner() public {
+        AddressStorage _data = new AddressStorage(_key);
+        try _data.selfDestruct(owner_AddressStorage) {
+            Assert.isTrue(false, "Failed to catch expected error");
+        } catch Error(string memory _reason) {
+            Assert.equal(
+                _reason,
+                "AddressStorage.selfDestruct: message sender not an owner",
                 "Caught unexpected error reason"
             );
         }

@@ -34,6 +34,7 @@ Solidity contract for storing and interacting with key/value address pairs
     - [Method `listKeys`][heading__method_listkeys]
     - [Method `remove`][heading__method_remove]
     - [Method `removeOrError`][heading__method_removeorerror]
+    - [Method `selfDestruct`][heading__method_selfdestruct]
     - [Method `set`][heading__method_set]
     - [Method `setOrError`][heading__method_setorerror]
     - [Method `size`][heading__method_size]
@@ -779,6 +780,30 @@ efficiency reasons
 ---
 
 
+#### Method `selfDestruct`
+[heading__method_selfdestruct]:
+  #method-selfdestruct
+  "Call `selfdestruct` with provided `address`"
+
+
+> Call `selfdestruct` with provided `address`
+
+
+[**Source**][source__contracts__addressstorage_sol__selfdestruct] `selfDestruct(address payable _to)`
+
+
+**Parameters**
+
+
+- `_to` **{address}** Where to transfer any funds this contract has
+
+
+**Throws** -> **{Error}** `"AddressStorage.selfDestruct: message sender not an owner"`
+
+
+---
+
+
 #### Method `set`
 [heading__method_set]:
   #method-set
@@ -1234,15 +1259,19 @@ For further details review full length version of
   contracts/AddressStorage.sol#L153
   "Delete value `address` for given `_key`"
 
-[source__contracts__addressstorage_sol__set]:
+[source__contracts__addressstorage_sol__selfdestruct]:
   contracts/AddressStorage.sol#L178
-  "Store `_value` under given `_key` while preventing unintentional overwrites"
+  "Call `selfdestruct` with provided `address`"
 
-[source__contracts__addressstorage_sol__setorerror]:
+[source__contracts__addressstorage_sol__set]:
   contracts/AddressStorage.sol#L188
   "Store `_value` under given `_key` while preventing unintentional overwrites"
 
+[source__contracts__addressstorage_sol__setorerror]:
+  contracts/AddressStorage.sol#L198
+  "Store `_value` under given `_key` while preventing unintentional overwrites"
+
 [source__contracts__addressstorage_sol__size]:
-  contracts/AddressStorage.sol#L205
+  contracts/AddressStorage.sol#L215
   "Number of key/value `address` pairs currently stored"
 

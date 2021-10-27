@@ -175,6 +175,16 @@ contract AddressStorage {
         return _value;
     }
 
+    /// @notice Call `selfdestruct` with provided `address`
+    /// @param _to **{address}** Where to transfer any funds this contract has
+    /// @custom:throws **{Error}** `"AddressStorage.selfDestruct: message sender not an owner"`
+    function selfDestruct(address payable _to)
+        external
+        onlyOwner("selfDestruct")
+    {
+        selfdestruct(_to);
+    }
+
     /// @notice Store `_value` under given `_key` while preventing unintentional overwrites
     /// @dev Forwards parameters to `setOrError` with default `_reason`
     /// @param _key **{address}** Mapping key to set corresponding value `address` for
