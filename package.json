@@ -30,6 +30,10 @@
     "url": "https://github.com/solidity-utilities/address-storage/issues"
   },
   "homepage": "https://github.com/solidity-utilities/address-storage#readme",
+  "funding": {
+    "type": "individual",
+    "url": "https://liberapay.com/solidity-utilities/"
+  },
   "devDependencies": {
     "@truffle/hdwallet-provider": "^1.0.37",
     "ganache-cli": "^6.5.0",
@@ -38,6 +42,6 @@
     "truffle": "^5.1.65"
   },
   "dependencies": {
-    "@solidity-utilities/library-mapping-address": "^0.0.2"
+    "@solidity-utilities/library-mapping-address": "^0.0.3"
   }
 }
