@@ -110,9 +110,6 @@ contract Host {
         onlyNotBanned(_owner, "registerAccount")
         returns (Account)
     {
-        require(!active_accounts.has(_owner), "account already active");
-        require(!banned_accounts.has(_owner), "account was banned");
-
         Account _account = new Account(_owner, _name);
         address _account_reference = address(_account);
 
