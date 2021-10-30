@@ -70,7 +70,7 @@ contract AddressStorage {
     /// @param _key **{address}** Mapping key `address` to lookup corresponding value `address` for
     /// @return **{address}** Value for given key `address`
     /// @custom:throws **{Error}** `"AddressStorage.get: value not defined"`
-    function get(address _key) public view returns (address) {
+    function get(address _key) external view returns (address) {
         return data.getOrError(_key, "AddressStorage.get: value not defined");
     }
 
@@ -105,7 +105,7 @@ contract AddressStorage {
     /// @dev Forwards parameter to `data.has`
     /// @param _key **{address}** Mapping key to check if value `address` is defined
     /// @return **{bool}** `true` if value `address` is defined, or `false` if _undefined_
-    function has(address _key) public view returns (bool) {
+    function has(address _key) external view returns (bool) {
         return data.has(_key);
     }
 
@@ -146,7 +146,7 @@ contract AddressStorage {
     /// @return **{address}** Value `address` that was removed from `data` storage
     /// @custom:throws **{Error}** `"AddressStorage.remove: message sender not an owner"`
     /// @custom:throws **{Error}** `"AddressStorage.remove: value not defined"`
-    function remove(address _key) public onlyOwner("remove") returns (address) {
+    function remove(address _key) external onlyOwner("remove") returns (address) {
         return removeOrError(_key, "AddressStorage.remove: value not defined");
     }
 
