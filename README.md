@@ -1135,7 +1135,7 @@ For further details review full length version of
 
 
 [badge__github_actions]:
-  https://img.shields.io/github/workflow/status/solidity-utilities/address-storage/test?event=push
+  https://github.com/solidity-utilities/address-storage/actions/workflows/test.yaml/badge.svg?branch=main
 
 [activity_log__github_actions]:
   https://github.com/solidity-utilities/address-storage/deployments/activity_log
