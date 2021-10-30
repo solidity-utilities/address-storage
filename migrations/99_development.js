@@ -19,7 +19,6 @@ module.exports = (deployer, network, accounts) => {
 
   // LibraryMappingAddress.address = "0x0...";
   deployer.deploy(LibraryMappingAddress, { overwrite: false });
-  // deployer.deploy(LibraryMappingAddress);
   deployer.link(LibraryMappingAddress, [AddressStorage, Host]);
 
   deployer.deploy(AddressStorage, owner_AddressStorage);
