@@ -162,4 +162,3 @@ contract Test_AddressStorage {
         Assert.isFalse(data.has(_key), "Failed to remove value by key");
     }
 }
-
