@@ -1,6 +1,6 @@
 {
   "package_name": "address-storage",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Solidity contract for storing and interacting with key/value address pairs",
   "authors": ["S0AndS0 <https://github.com/S0AndS0>"],
   "links": {
