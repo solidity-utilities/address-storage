@@ -45,6 +45,9 @@ Solidity contract for storing and interacting with key/value address pairs
   - [:trident: Forking][heading__forking]
   - [:currency_exchange: Sponsor][heading__sponsor]
 
+- [&#x1f4dc; Change Log][heading__change_log]
+  - [Version `0.1.0`][heading__version_010]
+
 - [:card_index: Attribution][heading__attribution]
 
 - [:balance_scale: Licensing][heading__license]
@@ -1037,6 +1040,47 @@ Regardless of if you're able to financially support projects such as
 `address-storage` that `solidity-utilities` maintains, please consider sharing
 projects that are useful with others, because one of the goals of maintaining
 Open Source repositories is to provide value to the community.
+
+
+______
+
+
+## Change Log
+[heading__change_log]:
+  #change-log
+  "&#x1f4dc; Note, this section only documents breaking changes or major feature releases"
+
+
+> Note, this section only documents breaking changes or major feature releases
+
+
+---
+
+
+### Version `0.1.0`
+[heading__version_010]:
+  #version-010
+  "Make eligible functions `external`"
+
+
+> Make eligible functions `external`
+
+
+```bash
+git diff 'v0.1.0' 'v0.0.2'
+```
+
+
+**Developer notes**
+
+
+Recent update to version `0.1.0` of `library-mapping-address` dependency now
+attempts to prevent assigning values of `0x0`
+
+
+Functions `get`, `has`, and `remove` are now `external` typed. However,
+`getOrError` and `removeOrError` will remain `public` due to code duplication
+causing _"out of gas"_ errors for some use cases.
 
 
 ______
