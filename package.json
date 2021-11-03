@@ -1,6 +1,6 @@
 {
   "name": "@solidity-utilities/address-storage",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Solidity contract for storing and interacting with key/value address pairs",
   "main": "null",
   "directories": {
