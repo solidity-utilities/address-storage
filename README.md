@@ -23,8 +23,10 @@ Solidity contract for storing and interacting with key/value address pairs
 
 - [&#x1F523; API][heading__api]
   - [Contract `AddressStorage`][heading__contract_addressstorage]
+    - [Method `addAuthorized`][heading__method_addauthorized]
     - [Method `changeOwner`][heading__method_changeowner]
     - [Method `clear`][heading__method_clear]
+    - [Method `deleteAuthorized`][heading__method_deleteauthorized]
     - [Method `get`][heading__method_get]
     - [Method `getOrElse`][heading__method_getorelse]
     - [Method `getOrError`][heading__method_getorerror]
@@ -47,6 +49,7 @@ Solidity contract for storing and interacting with key/value address pairs
 
 - [&#x1f4dc; Change Log][heading__change_log]
   - [Version `0.1.0`][heading__version_010]
+  - [Version `0.2.0`][heading__version_020]
 
 - [:card_index: Attribution][heading__attribution]
 
@@ -444,11 +447,40 @@ ______
 
 - `keys` **{address[]}** Warning order of keys **NOT** guaranteed!
 
-- `owner` **{address}** Allow mutation from specified `address`
+- `owner` **{address}** Allow mutation or selfdestruct from specified `address`
+
+- `authorized` **{mapping(address => bool)}** Allow mutation from mapped `address`s
 
 
 **Developer note** -> Depends on
 [`@solidity-utilities/library-mapping-address`][docs__library_mapping_address]
+
+
+---
+
+
+#### Method `addAuthorized`
+[heading__method_addauthorized]:
+  #method-addauthorized
+  "Insert `address` into `mapping` of `authorized` data structure"
+
+
+> Insert `address` into `mapping` of `authorized` data structure
+
+
+[**Source**][source__contracts__addressstorage_sol__addauthorized] `addAuthorized(address _key)`
+
+
+**Parameters**
+
+
+- `_key` **{address}** Key to set value of `true`
+
+
+**Throws** -> **{Error}** `"AddressStorage.addAuthorized: message sender not an owner"`
+
+
+**Developer note** -> Does not check if `address` is already `authorized`
 
 
 ---
@@ -490,10 +522,39 @@ ______
 [**Source**][source__contracts__addressstorage_sol__clear] `clear()`
 
 
-**Throws** -> **{Error}** `"AddressStorage.clar: message sender not an owner"`
+**Throws** -> **{Error}** `"AddressStorage.clear: message sender not authorized"`
 
 
 **Developer note** -> **Warning** may fail if storing many `address` pairs
+
+
+---
+
+
+#### Method `deleteAuthorized`
+[heading__method_deleteauthorized]:
+  #method-deleteauthorized
+  "Remove `address` from `mapping` of `authorized` data structure"
+
+
+> Remove `address` from `mapping` of `authorized` data structure
+
+
+[**Source**][source__contracts__addressstorage_sol__deleteauthorized] `deleteAuthorized(address _key)`
+
+
+**Parameters**
+
+
+- `_key` **{address}** Key to set value of `false`
+
+
+**Throws**
+
+
+- **{Error}** `"AddressStorage.deleteAuthorized: message sender not authorized"`
+
+- **{Error}** `"AddressStorage.deleteAuthorized: cannot remove owner"`
 
 
 ---
@@ -732,7 +793,7 @@ storage
 **Throws**
 
 
-- **{Error}** `"AddressStorage.remove: message sender not an owner"`
+- **{Error}** `"AddressStorage.remove: message sender not authorized"`
 
 - **{Error}** `"AddressStorage.remove: value not defined"`
 
@@ -771,7 +832,7 @@ storage
 **Throws**
 
 
-- **{Error}** `"AddressStorage.removeOrError: message sender not an owner"`
+- **{Error}** `"AddressStorage.removeOrError: message sender not authorized"`
 
 - **{Error}** `_reason` if value is _undefined_
 
@@ -830,7 +891,7 @@ efficiency reasons
 **Throws**
 
 
-- **{Error}** `"AddressStorage.set: message sender not an owner"`
+- **{Error}** `"AddressStorage.set: message sender not authorized"`
 
 - **{Error}** `"AddressStorage.set: value already defined"`
 
@@ -867,7 +928,7 @@ efficiency reasons
 **Throws**
 
 
-- **{Error}** `"AddressStorage.setOrError: message sender not an owner"`
+- **{Error}** `"AddressStorage.setOrError: message sender not authorized"`
 
 - **{Error}** `_reason` if value is defined
 
@@ -1083,6 +1144,65 @@ Functions `get`, `has`, and `remove` are now `external` typed. However,
 causing _"out of gas"_ errors for some use cases.
 
 
+---
+
+
+### Version `0.2.0`
+[heading__version_020]:
+  #version-020
+  "Allow multiple addresses to mutate `data`"
+
+
+> Allow multiple addresses to mutate `data`
+
+
+```bash
+git diff 'v0.2.0' 'v0.1.0'
+```
+
+
+**Developer notes**
+
+
+Functions `clear`, `remove`, `removeOrError`, `set`, and `setOrError` now
+utilize the `onlyAuthorized` modifier. If using `try`/`catch` and filtering on
+reason, then please update from
+`"AddressStorage.__name__: message sender not an owner"`
+to
+`"AddressStorage.__name__: message sender not authorized"`
+
+
+**Warning** the `authorized` mapping does not track defined keys, and is
+intended for allowing other smart contract(s) mutation permissions.
+
+
+**Warning** due to code additions of `addAuthorized` and `deleteAuthorized`
+compiler optimization is currently necessary, eg.
+
+
+[**`truffle-config.js` (snip)**][source__truffle_config_js]
+
+
+```JavaScript
+module.exports = {
+  /* ... */
+  compilers: {
+    solc: {
+      version: "0.8.7",
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 200
+        },
+        /* ... */
+      },
+    },
+  },
+  /* ... */
+};
+```
+
+
 ______
 
 
@@ -1255,67 +1375,79 @@ For further details review full length version of
   test/test__examples__Host.js
   "JavaScript code for testing test/examples/Host.sol"
 
+[source__truffle_config_js]:
+  truffle-config.js
+  "Use this file to configure your truffle project"
+
 [source__contracts__addressstorage_sol]:
   contracts/AddressStorage.sol
   "Solidity contract for storing and interacting with key/value `address` pairs"
 
+[source__contracts__addressstorage_sol__addauthorized]:
+  contracts/AddressStorage.sol#L64
+  "Insert `address` into `mapping` of `authorized` data structure"
+
 [source__contracts__addressstorage_sol__changeowner]:
-  contracts/AddressStorage.sol#L47
+  contracts/AddressStorage.sol#L72
   "Overwrite old `owner` with new owner `address`"
 
 [source__contracts__addressstorage_sol__clear]:
-  contracts/AddressStorage.sol#L54
+  contracts/AddressStorage.sol#L79
   "Delete `mapping` address key/value pairs and remove all `address` from `keys`"
 
+[source__contracts__addressstorage_sol__deleteauthorized]:
+  contracts/AddressStorage.sol#L93
+  "Remove `address` from `mapping` of `authorized` data structure"
+
 [source__contracts__addressstorage_sol__get]:
-  contracts/AddressStorage.sol#L68
+  contracts/AddressStorage.sol#L112
   "Retrieve stored value `address` or throws an error if _undefined_"
 
 [source__contracts__addressstorage_sol__getorelse]:
-  contracts/AddressStorage.sol#L77
+  contracts/AddressStorage.sol#L121
   "Retrieve stored value `address` or provided default `address` if _undefined_"
 
 [source__contracts__addressstorage_sol__getorerror]:
-  contracts/AddressStorage.sol#L90
+  contracts/AddressStorage.sol#L134
   "Allow for defining custom error reason if value `address` is _undefined_"
 
 [source__contracts__addressstorage_sol__has]:
-  contracts/AddressStorage.sol#L104
+  contracts/AddressStorage.sol#L148
   "Check if `address` key has a corresponding value `address` defined"
 
 [source__contracts__addressstorage_sol__indexof]:
-  contracts/AddressStorage.sol#L112
+  contracts/AddressStorage.sol#L156
   "Index for `address` key within `keys` array"
 
 [source__contracts__addressstorage_sol__indexoforerror]:
-  contracts/AddressStorage.sol#L121
+  contracts/AddressStorage.sol#L165
   "Index for `address` key within `keys` array"
 
 [source__contracts__addressstorage_sol__listkeys]:
-  contracts/AddressStorage.sol#L136
+  contracts/AddressStorage.sol#L180
   "Convenience function to read all `mapping` key addresses"
 
 [source__contracts__addressstorage_sol__remove]:
-  contracts/AddressStorage.sol#L143
+  contracts/AddressStorage.sol#L187
   "Delete value `address` for given `_key`"
 
 [source__contracts__addressstorage_sol__removeorerror]:
-  contracts/AddressStorage.sol#L153
+  contracts/AddressStorage.sol#L201
   "Delete value `address` for given `_key`"
 
 [source__contracts__addressstorage_sol__selfdestruct]:
-  contracts/AddressStorage.sol#L178
+  contracts/AddressStorage.sol#L226
   "Call `selfdestruct` with provided `address`"
 
 [source__contracts__addressstorage_sol__set]:
-  contracts/AddressStorage.sol#L188
+  contracts/AddressStorage.sol#L236
   "Store `_value` under given `_key` while preventing unintentional overwrites"
 
 [source__contracts__addressstorage_sol__setorerror]:
-  contracts/AddressStorage.sol#L198
+  contracts/AddressStorage.sol#L246
   "Store `_value` under given `_key` while preventing unintentional overwrites"
 
 [source__contracts__addressstorage_sol__size]:
-  contracts/AddressStorage.sol#L215
+  contracts/AddressStorage.sol#L263
   "Number of key/value `address` pairs currently stored"
 
