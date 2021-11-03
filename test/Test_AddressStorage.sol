@@ -12,6 +12,7 @@ contract Test_AddressStorage {
     address _key = address(0x1);
     address _value = address(0x2);
     address _default_value = address(0x3);
+    address _moderator = address(0x4);
 
     AddressStorage data = new AddressStorage(owner_AddressStorage);
 
@@ -19,6 +20,68 @@ contract Test_AddressStorage {
     function afterEach() public {
         if (data.has(_key)) {
             data.remove(_key);
+        }
+        if (data.authorized(_moderator)) {
+            data.deleteAuthorized(_moderator);
+        }
+    }
+
+    ///
+    function test_addAuthorized() public {
+        Assert.isFalse(
+            data.authorized(_moderator),
+            "Address already authorized"
+        );
+        data.addAuthorized(_moderator);
+        Assert.isTrue(
+            data.authorized(_moderator),
+            "Failed to authorize address"
+        );
+    }
+
+    ///
+    function test_addAuthorized_not_owner() public {
+        AddressStorage _data = new AddressStorage(_key);
+        try _data.addAuthorized(_value) {
+            Assert.isTrue(false, "Failed to catch expected error");
+        } catch Error(string memory _reason) {
+            Assert.equal(
+                _reason,
+                "AddressStorage.addAuthorized: message sender not an owner",
+                "Caught unexpected error reason"
+            );
+        }
+    }
+
+    ///
+    function test_deleteAuthorized() public {
+        Assert.isFalse(
+            data.authorized(_moderator),
+            "Address already authorized"
+        );
+        data.addAuthorized(_moderator);
+        Assert.isTrue(
+            data.authorized(_moderator),
+            "Failed to authorize address"
+        );
+        data.deleteAuthorized(_moderator);
+        Assert.isFalse(
+            data.authorized(_moderator),
+            "Failed to de-authenticate address"
+        );
+    }
+
+    ///
+    function test_deleteAuthorized_not_owner() public {
+        AddressStorage _data = new AddressStorage(_key);
+        try _data.deleteAuthorized(_value) {
+            Assert.isTrue(false, "Failed to catch expected error");
+        } catch Error(string memory _reason) {
+            Assert.equal(
+                _reason,
+                "AddressStorage.deleteAuthorized: message sender not authorized",
+                "Caught unexpected error reason"
+            );
         }
     }
 
