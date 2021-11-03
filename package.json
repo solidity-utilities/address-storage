@@ -44,6 +44,6 @@
     "truffle-contract-size": "^2.0.1"
   },
   "dependencies": {
-    "@solidity-utilities/library-mapping-address": "^0.1.0"
+    "@solidity-utilities/library-mapping-address": "^0.1.1"
   }
 }
