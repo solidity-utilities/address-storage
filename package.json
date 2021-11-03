@@ -11,6 +11,7 @@
     "ganache-cli": "ganache-cli",
     "soldocgen": "soldocgen --output gitbook --ignore Migrations.sol docs/ contracts/",
     "test": "truffle test",
+    "truffle-contract-size": "truffle run contract-size",
     "prepare": "husky install"
   },
   "repository": {
@@ -39,7 +40,8 @@
     "ganache-cli": "^6.5.0",
     "husky": "^7.0.2",
     "soldocgen": "^0.0.3",
-    "truffle": "^5.1.65"
+    "truffle": "^5.1.65",
+    "truffle-contract-size": "^2.0.1"
   },
   "dependencies": {
     "@solidity-utilities/library-mapping-address": "^0.1.0"
