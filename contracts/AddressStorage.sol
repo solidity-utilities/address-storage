@@ -14,8 +14,10 @@ contract AddressStorage {
     mapping(address => uint256) public indexes;
     /// Warning order of keys **NOT** guaranteed!
     address[] public keys;
-    /// Allow mutation from specified `address`
+    /// Allow mutation or selfdestruct from specified `address`
     address public owner;
+    /// Allow mutation from mapped `address`s
+    mapping(address => bool) public authorized;
 
     /* -------------------------------------------------------------------- */
 
@@ -42,7 +44,30 @@ contract AddressStorage {
         _;
     }
 
+    /// @notice Requires message sender to be in authorized mapping
+    /// @param _caller **{string}** Function name that implements this modifier
+    /// @custom:throws **{Error}** `"AddressStorage._caller: message sender not authorized"`
+    modifier onlyAuthorized(string memory _caller) {
+        string memory _message = string(
+            abi.encodePacked(
+                "AddressStorage.",
+                _caller,
+                ": message sender not authorized"
+            )
+        );
+        require(authorized[msg.sender] || msg.sender == owner, _message);
+        _;
+    }
+
     /* -------------------------------------------------------------------- */
+
+    /// @notice Insert `address` into `mapping` of `authorized` data structure
+    /// @dev Does not check if `address` is already `authorized`
+    /// @param _key **{address}** Key to set value of `true`
+    /// @custom:throws **{Error}** `"AddressStorage.addAuthorized: message sender not authorized"`
+    function addAuthorized(address _key) external onlyOwner("addAuthorized") {
+        authorized[_key] = true;
+    }
 
     /// @notice Overwrite old `owner` with new owner `address`
     /// @param _new_owner **{address}** New owner address
@@ -53,8 +78,8 @@ contract AddressStorage {
 
     /// @notice Delete `mapping` address key/value pairs and remove all `address` from `keys`
     /// @dev **Warning** may fail if storing many `address` pairs
-    /// @custom:throws **{Error}** `"AddressStorage.clear: message sender not an owner"`
-    function clear() external onlyOwner("clear") {
+    /// @custom:throws **{Error}** `"AddressStorage.clear: message sender not authorized"`
+    function clear() external onlyAuthorized("clear") {
         uint256 _index = keys.length;
         while (_index > 0) {
             _index--;
@@ -63,6 +88,25 @@ contract AddressStorage {
             delete indexes[_key];
             keys.pop();
         }
+    }
+
+    /// @notice Remove `address` from `mapping` of `authorized` data structure
+    /// @param _key **{address}** Key to set value of `false`
+    /// @custom:throws **{Error}** `"AddressStorage.deleteAuthorized: message sender not authorized"`
+    /// @custom:throws **{Error}** `"AddressStorage.deleteAuthorized: cannot remove owner"`
+    function deleteAuthorized(address _key)
+        external
+        onlyAuthorized("deleteAuthorized")
+    {
+        require(
+            msg.sender == owner || msg.sender == _key,
+            "AddressStorage.deleteAuthorized: message sender not authorized"
+        );
+        require(
+            _key != owner,
+            "AddressStorage.deleteAuthorized: cannot remove owner"
+        );
+        delete authorized[_key];
     }
 
     /// @notice Retrieve stored value `address` or throws an error if _undefined_
@@ -144,9 +188,13 @@ contract AddressStorage {
     /// @dev Passes parameter to `removeOrError` with default `_reason`
     /// @param _key **{address}** Mapping key to delete corresponding value `address` for
     /// @return **{address}** Value `address` that was removed from `data` storage
-    /// @custom:throws **{Error}** `"AddressStorage.remove: message sender not an owner"`
+    /// @custom:throws **{Error}** `"AddressStorage.remove: message sender not authorized"`
     /// @custom:throws **{Error}** `"AddressStorage.remove: value not defined"`
-    function remove(address _key) external onlyOwner("remove") returns (address) {
+    function remove(address _key)
+        external
+        onlyAuthorized("remove")
+        returns (address)
+    {
         return removeOrError(_key, "AddressStorage.remove: value not defined");
     }
 
@@ -155,11 +203,11 @@ contract AddressStorage {
     /// @param _key **{address}** Mapping key to delete corresponding value `address` for
     /// @param _reason **{string}** Custom error message to throw if value `address` is _undefined_
     /// @return **{address}** Value `address` that was removed from `data` storage
-    /// @custom:throws **{Error}** `"AddressStorage.removeOrError: message sender not an owner"`
+    /// @custom:throws **{Error}** `"AddressStorage.removeOrError: message sender not authorized"`
     /// @custom:throws **{Error}** `_reason` if value is _undefined_
     function removeOrError(address _key, string memory _reason)
         public
-        onlyOwner("removeOrError")
+        onlyAuthorized("removeOrError")
         returns (address)
     {
         address _value = data.removeOrError(_key, _reason);
@@ -189,9 +237,9 @@ contract AddressStorage {
     /// @dev Forwards parameters to `setOrError` with default `_reason`
     /// @param _key **{address}** Mapping key to set corresponding value `address` for
     /// @param _value **{address}** Mapping value to set
-    /// @custom:throws **{Error}** `"AddressStorage.set: message sender not an owner"`
+    /// @custom:throws **{Error}** `"AddressStorage.set: message sender not authorized"`
     /// @custom:throws **{Error}** `"AddressStorage.set: value already defined"`
-    function set(address _key, address _value) external onlyOwner("set") {
+    function set(address _key, address _value) external onlyAuthorized("set") {
         setOrError(_key, _value, "AddressStorage.set: value already defined");
     }
 
@@ -200,13 +248,13 @@ contract AddressStorage {
     /// @param _key **{address}** Mapping key to set corresponding value `address` for
     /// @param _value **{address}** Mapping value to set
     /// @param _reason **{string}** Custom error message to present if value `address` is defined
-    /// @custom:throws **{Error}** `"AddressStorage.setOrError: message sender not an owner"`
+    /// @custom:throws **{Error}** `"AddressStorage.setOrError: message sender not authorized"`
     /// @custom:throws **{Error}** `_reason` if value is defined
     function setOrError(
         address _key,
         address _value,
         string memory _reason
-    ) public onlyOwner("setOrError") {
+    ) public onlyAuthorized("setOrError") {
         data.setOrError(_key, _value, _reason);
         indexes[_key] = keys.length;
         keys.push(_key);
