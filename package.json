@@ -42,6 +42,6 @@
     "truffle": "^5.1.65"
   },
   "dependencies": {
-    "@solidity-utilities/library-mapping-address": "^0.0.3"
+    "@solidity-utilities/library-mapping-address": "^0.1.0"
   }
 }
