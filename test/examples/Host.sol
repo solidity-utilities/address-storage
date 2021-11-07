@@ -5,13 +5,19 @@ import { AddressStorage } from "../../contracts/AddressStorage.sol";
 // import {
 //     AddressStorage
 // } from "@solidity-utilities/address-storage/contracts/AddressStorage.sol";
+
+import { InterfaceAddressStorage } from "../../contracts/InterfaceAddressStorage.sol";
+// import {
+//     InterfaceAddressStorage
+// } from "@solidity-utilities/address-storage/contracts/InterfaceAddressStorage.sol";
+
 import { Account } from "./Account.sol";
 
 /// @title Example contract to demonstrate further abstraction of `AddressStorage` features
 /// @author S0AndS0
 contract Host {
-    AddressStorage public active_accounts = new AddressStorage(address(this));
-    AddressStorage public banned_accounts = new AddressStorage(address(this));
+    address public active_accounts = address(new AddressStorage(address(this)));
+    address public banned_accounts = address(new AddressStorage(address(this)));
     address public owner;
 
     /* -------------------------------------------------------------------- */
@@ -39,7 +45,7 @@ contract Host {
         string memory _message = string(
             abi.encodePacked("Host.", _caller, ": account already active")
         );
-        require(!active_accounts.has(_key), _message);
+        require(!InterfaceAddressStorage(active_accounts).has(_key), _message);
         _;
     }
 
@@ -49,7 +55,7 @@ contract Host {
         string memory _message = string(
             abi.encodePacked("Host.", _caller, ": account was banned")
         );
-        require(!banned_accounts.has(_key), _message);
+        require(!InterfaceAddressStorage(banned_accounts).has(_key), _message);
         _;
     }
 
@@ -68,11 +74,9 @@ contract Host {
     /// @custom:throws `"Host.banAccount: not active"`
     /// @custom:throws `"Host.banAccount: already banned"`
     function banAccount(address _key) external onlyOwner("banAccount") {
-        address _account_reference = active_accounts.removeOrError(
-            _key,
-            "Host.banAccount: not active"
-        );
-        banned_accounts.setOrError(
+        address _account_reference = InterfaceAddressStorage(active_accounts)
+            .removeOrError(_key, "Host.banAccount: not active");
+        InterfaceAddressStorage(banned_accounts).setOrError(
             _key,
             _account_reference,
             "Host.banAccount: already banned"
@@ -93,7 +97,10 @@ contract Host {
     {
         address _owner = _account.owner();
         address _account_reference = address(_account);
-        active_accounts.set(_owner, _account_reference);
+        InterfaceAddressStorage(active_accounts).set(
+            _owner,
+            _account_reference
+        );
         emit ActivatedAccount(_owner, _account_reference);
         return _account;
     }
@@ -113,7 +120,10 @@ contract Host {
         Account _account = new Account(_owner, _name);
         address _account_reference = address(_account);
 
-        active_accounts.set(_owner, _account_reference);
+        InterfaceAddressStorage(active_accounts).set(
+            _owner,
+            _account_reference
+        );
         emit ActivatedAccount(_owner, _account_reference);
 
         return _account;
@@ -130,10 +140,12 @@ contract Host {
         returns (Account)
     {
         address _account_reference;
-        if (active_accounts.has(_key)) {
-            _account_reference = active_accounts.remove(_key);
-        } else if (banned_accounts.has(_key)) {
-            _account_reference = banned_accounts.remove(_key);
+        if (InterfaceAddressStorage(active_accounts).has(_key)) {
+            _account_reference = InterfaceAddressStorage(active_accounts)
+                .remove(_key);
+        } else if (InterfaceAddressStorage(banned_accounts).has(_key)) {
+            _account_reference = InterfaceAddressStorage(banned_accounts)
+                .remove(_key);
         }
 
         require(
@@ -149,12 +161,14 @@ contract Host {
     /// @param _key **{address}** Old owner `address` to sync with `Account.owner`
     /// @custom:throws **{Error}** `"Host.updateKey: message sender not Account owner"`
     function updateKey(address _key) external {
-        Account _account = Account(active_accounts.get(_key));
+        Account _account = Account(
+            InterfaceAddressStorage(active_accounts).get(_key)
+        );
         require(
             msg.sender == _account.owner(),
             "Host.updateKey: message sender not Account owner"
         );
-        active_accounts.remove(_key);
+        InterfaceAddressStorage(active_accounts).remove(_key);
         importAccount(_account);
     }
 
@@ -163,10 +177,8 @@ contract Host {
     /// @return **{string}** Name saved within `Account` instance
     /// @custom:throws **{Error}** `"Host.whoIs: account not active"`
     function whoIs(address _key) external view returns (string memory) {
-        address _account_reference = active_accounts.getOrError(
-            _key,
-            "Host.whoIs: account not active"
-        );
+        address _account_reference = InterfaceAddressStorage(active_accounts)
+            .getOrError(_key, "Host.whoIs: account not active");
         Account _account_instance = Account(_account_reference);
         return _account_instance.name();
     }
