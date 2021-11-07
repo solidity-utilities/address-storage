@@ -44,7 +44,7 @@ contract AddressStorage {
         _;
     }
 
-    /// @notice Requires message sender to be in authorized mapping
+    /// @notice Requires message sender to be in authorized mapping or contract owner
     /// @param _caller **{string}** Function name that implements this modifier
     /// @custom:throws **{Error}** `"AddressStorage._caller: message sender not authorized"`
     modifier onlyAuthorized(string memory _caller) {
