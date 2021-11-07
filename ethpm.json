@@ -1,6 +1,6 @@
 {
   "package_name": "address-storage",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Solidity contract for storing and interacting with key/value address pairs",
   "authors": ["S0AndS0 <https://github.com/S0AndS0>"],
   "links": {
@@ -19,6 +19,6 @@
   "license": "AGPL-3.0",
   "manifest": "ethpm/3",
   "dependencies": {
-    "library-mapping-address": "^0.0.2"
+    "library-mapping-address": "^0.1.1"
   }
 }
