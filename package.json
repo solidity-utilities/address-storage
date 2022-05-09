@@ -38,7 +38,7 @@
   "devDependencies": {
     "@truffle/hdwallet-provider": "^2.0.0",
     "ganache-cli": "^6.5.0",
-    "husky": "^7.0.2",
+    "husky": "^8.0.1",
     "soldocgen": "^0.0.3",
     "truffle": "^5.1.65",
     "truffle-contract-size": "^2.0.1"
